@@ -1,0 +1,22 @@
+{
+  "name": "learning-express",
+  "version": "1.0.0",
+  "description": "My first project with express",
+  "main": "index.js",
+  "author": "xtiam57",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "joi": "^17.2.1",
+    "mongoose": "^5.10.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

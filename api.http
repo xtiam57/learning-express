@@ -1,0 +1,21 @@
+GET http://localhost:3333/
+
+###
+
+POST http://localhost:3333/api/users/register
+Content-Type: application/json
+
+{
+  "email": "christiam.mena@gmail.com",
+  "password": "123456"
+}
+
+###
+
+POST http://localhost:3333/api/users/auth
+Content-Type: application/json
+
+{
+  "email": "christiam.mena@gmail.com",
+  "password": "123456"
+}
