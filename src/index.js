@@ -9,7 +9,7 @@ const tasksRouter = require('./routes/tasks');
 
 // Starting app
 const app = express();
-const port = process.env.APP_PORT || 8000;
+const port = process.env.PORT || 8000;
 
 // Middlewares
 app.use(express.json());
