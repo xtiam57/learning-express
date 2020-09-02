@@ -1,9 +1,28 @@
-import express from 'express';
+const express = require('express');
+const dotenv = require('dotenv');
 
-import { SECRET_TOKEN, APP_PORT } from './settings.js';
-import usersRouter from './routes/users.js';
+const connectToDB = require('./connection');
+const handleErrors = require('./middleware/handleErrors');
 
+const usersRouter = require('./routes/users');
+const tasksRouter = require('./routes/tasks');
+
+// Getting environments variables
+dotenv.config({ path: './src/environments/.env' });
+const { APP_PORT } = process.env;
+
+// Starting app
 const app = express();
+
+// Middlewares
+app.use(express.json());
+
+// Router
+app.use('/api/users', usersRouter);
+app.use('/api/tasks', tasksRouter);
+
+// Error handler middleware
+app.use(handleErrors);
 
 // Root
 app.get('/', (req, res) => {
@@ -12,12 +31,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Middlewares
-app.use(express.json());
+connectToDB();
 
-// Router
-app.use('/api/users', usersRouter);
-
-app.listen(APP_PORT, () => {
-  console.log(`API listening on port: ${APP_PORT}`);
+app.listen(process.env.APP_PORT, () => {
+  console.log(`API listening on port: ${process.env.APP_PORT}`);
 });

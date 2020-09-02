@@ -1,21 +1,21 @@
 GET http://localhost:3333/
-
 ###
-
-POST http://localhost:3333/api/users/register
+GET http://localhost:3333/api/users
+Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNGVkYzY5ZDM3NGNiNjA2NDlhODA5MiIsIm5hbWUiOiJEaWFuYSBNZW5hIiwiZW1haWwiOiJkaWFuYS5tZW5hQGdtYWlsLmNvbSIsImNyZWF0ZWRBdCI6IjIwMjAtMDktMDFUMjM6NDI6MzMuNTgzWiIsInVwZGF0ZWRBdCI6IjIwMjAtMDktMDFUMjM6NDI6MzMuNTgzWiIsImlhdCI6MTU5OTA2MTE5M30.LPxQ2YG2ihSDZ0_OqDqq20jJ5Qy3OEV42xQC6wjLuqw
+###
+POST http://localhost:3333/api/users
 Content-Type: application/json
 
 {
-  "email": "christiam.mena@gmail.com",
+  "name": "Madison Mena",
+  "email": "madison.mena@gmail.com",
   "password": "123456"
 }
-
 ###
-
 POST http://localhost:3333/api/users/auth
 Content-Type: application/json
 
 {
-  "email": "christiam.mena@gmail.com",
+  "email": "diana.mena@gmail.com",
   "password": "123456"
 }

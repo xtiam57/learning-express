@@ -5,7 +5,6 @@
   "main": "index.js",
   "author": "xtiam57",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "start": "nodemon src/index.js"
   },
@@ -14,6 +13,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "joi": "^17.2.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.2"
   },
   "devDependencies": {
