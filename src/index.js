@@ -1,5 +1,5 @@
 const express = require('express');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
 const connectToDB = require('./connection');
 const handleErrors = require('./middleware/handleErrors');
@@ -7,12 +7,9 @@ const handleErrors = require('./middleware/handleErrors');
 const usersRouter = require('./routes/users');
 const tasksRouter = require('./routes/tasks');
 
-// Getting environments variables
-dotenv.config({ path: './src/environments/.env' });
-const { APP_PORT } = process.env;
-
 // Starting app
 const app = express();
+const port = process.env.APP_PORT || 8000;
 
 // Middlewares
 app.use(express.json());
@@ -26,13 +23,13 @@ app.use(handleErrors);
 
 // Root
 app.get('/', (req, res) => {
-  res.json({
+  res.send({
     status: 'It Works!'
   });
 });
 
 connectToDB();
 
-app.listen(process.env.APP_PORT, () => {
-  console.log(`API listening on port: ${process.env.APP_PORT}`);
+app.listen(port, () => {
+  console.log(`API listening on port: ${port}`);
 });
