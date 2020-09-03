@@ -1,12 +1,11 @@
 const express = require('express');
 require('dotenv').config();
 
-const apolloServer = require('./graphql/server');
-const connectToDB = require('./connection');
-const handleErrors = require('./middleware/handleErrors');
+const apolloServer = require('./graphql');
+const connectToDB = require('./config/db');
+const { handleErrors } = require('./middlewares');
 
-const usersRouter = require('./routes/users');
-const tasksRouter = require('./routes/tasks');
+const { usersRouter, tasksRouter } = require('./routes');
 
 // Starting app
 const app = express();

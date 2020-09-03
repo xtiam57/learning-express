@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { Forbidden } = require('../utils/errors');
 
-const auth = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   try {
     const token = req.header('auth-token');
 
@@ -17,4 +17,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+module.exports = verifyToken;

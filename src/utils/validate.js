@@ -1,4 +1,4 @@
-const validator = (SchemaValidation, data) => {
+const validate = (SchemaValidation, data) => {
   const { error } = SchemaValidation.validate(data);
 
   if (!error) {
@@ -10,4 +10,4 @@ const validator = (SchemaValidation, data) => {
   return detail.message;
 };
 
-module.exports = validator;
+module.exports = validate;

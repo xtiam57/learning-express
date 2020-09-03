@@ -1,15 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const { User, validateUpsert, validateAuth } = require('../models/User');
+const { User } = require('../models');
+const { UsersValidations } = require('../validations');
 const { BadRequest, Conflict, NotFound, Unauthorized } = require('../utils/errors');
-const { hash, compare } = require('../utils/hash');
-const auth = require('../middleware/auth');
+const { Crypto } = require('../utils');
+const { verifyToken } = require('../middlewares');
 
 const router = express.Router();
 
 router
-  .get('/', auth, async (req, res, next) => {
+  .get('/', async (req, res, next) => {
     try {
       const users = await User.find().select('-password');
       res.send(users);
@@ -23,7 +24,7 @@ router
     const { name, email, password } = body;
 
     try {
-      const error = validateUpsert(body);
+      const error = UsersValidations.validateUpsert(body);
 
       if (error) {
         throw new BadRequest(error);
@@ -35,7 +36,7 @@ router
         throw new Conflict(`The "email" (${email}) already exists`);
       }
 
-      const hashedPassword = await hash(password);
+      const hashedPassword = await Crypto.hash(password);
 
       const user = new User({
         name,
@@ -55,12 +56,12 @@ router
     }
   })
 
-  .post('/auth', async (req, res, next) => {
+  .post('/login', async (req, res, next) => {
     const { body } = req;
     const { email, password } = body;
 
     try {
-      const error = validateAuth(body);
+      const error = UsersValidations.validateLogin(body);
 
       if (error) {
         throw new BadRequest(error);
@@ -72,7 +73,7 @@ router
         throw new NotFound(`The "email" (${email}) was not found`);
       }
 
-      const validPassword = await compare(password, user.password);
+      const validPassword = await Crypto.compare(password, user.password);
 
       if (!validPassword) {
         throw new Unauthorized('Wrong "email"/"password" combination');

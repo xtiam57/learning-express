@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
-
-const validator = require('../utils/validator');
 
 // Model
 const UserSchema = new mongoose.Schema(
@@ -9,12 +6,14 @@ const UserSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      maxlength: 255
+      maxlength: 255,
+      trim: true
     },
     email: {
       type: String,
       required: true,
-      maxlength: 255
+      maxlength: 255,
+      trim: true
     },
     password: {
       type: String,
@@ -41,19 +40,4 @@ UserSchema.set('toJSON', {
 
 const User = mongoose.model('User', UserSchema);
 
-// Validations
-const UpsertValidation = Joi.object({
-  name: Joi.string().required().min(2).max(255),
-  email: Joi.string().required().email().min(6).max(255),
-  password: Joi.string().required().min(5).max(255)
-});
-
-const AuthValidation = Joi.object({
-  email: Joi.string().required().email().min(6).max(255),
-  password: Joi.string().required().min(5).max(255)
-});
-
-const validateUpsert = (data) => validator(UpsertValidation, data);
-const validateAuth = (data) => validator(AuthValidation, data);
-
-module.exports = { User, validateUpsert, validateAuth };
+module.exports = { User };
