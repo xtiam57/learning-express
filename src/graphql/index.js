@@ -98,5 +98,6 @@ module.exports = new ApolloServer({
   typeDefs,
   resolvers,
   context: { models },
-  playground: true
+  playground: true,
+  introspection: true
 });
