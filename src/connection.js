@@ -9,7 +9,7 @@ async function connectToDB() {
       useCreateIndex: true
     });
 
-    console.log('Connected to Mongo database.');
+    console.log('Connected to MongoDB.');
   } catch (err) {
     console.log(err);
   }
