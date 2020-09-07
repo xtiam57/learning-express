@@ -8,7 +8,7 @@ const { UsersValidations } = require('../validations');
 const { BadRequest, Conflict, NotFound, Unauthorized } = require('../utils/errors');
 const { Crypto } = require('../utils');
 
-router.get('/', verifyToken, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const users = await UserServices.getAll();
     res.send(users);
@@ -17,7 +17,7 @@ router.get('/', verifyToken, async (req, res, next) => {
   }
 });
 
-router.get('/:id', verifyToken, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const user = await UserServices.getById(req.params.id);
     res.send(user);
