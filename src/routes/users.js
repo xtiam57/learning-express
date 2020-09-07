@@ -1,94 +1,97 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const router = express.Router();
 
-const { User } = require('../models');
+const { verifyToken } = require('../middlewares');
+const { UserServices } = require('../services');
 const { UsersValidations } = require('../validations');
 const { BadRequest, Conflict, NotFound, Unauthorized } = require('../utils/errors');
 const { Crypto } = require('../utils');
-const { verifyToken } = require('../middlewares');
 
-const router = express.Router();
+router.get('/', verifyToken, async (req, res, next) => {
+  try {
+    const users = await UserServices.getAll();
+    res.send(users);
+  } catch (err) {
+    next(err);
+  }
+});
 
-router
-  .get('/', async (req, res, next) => {
-    try {
-      const users = await User.find().select('-password');
-      res.send(users);
-    } catch (err) {
-      next(err);
+router.get('/:id', verifyToken, async (req, res, next) => {
+  try {
+    const user = await UserServices.getById(req.params.id);
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/', async (req, res, next) => {
+  const { body } = req;
+  const { name, email, password } = body;
+
+  try {
+    const error = UsersValidations.validateUpsert(body);
+
+    if (error) {
+      throw new BadRequest(error);
     }
-  })
 
-  .post('/', async (req, res, next) => {
-    const { body } = req;
-    const { name, email, password } = body;
+    const alreadyExists = await UserServices.getByEmail(email);
 
-    try {
-      const error = UsersValidations.validateUpsert(body);
-
-      if (error) {
-        throw new BadRequest(error);
-      }
-
-      const alreadyExists = await User.findOne({ email }).select('-password');
-
-      if (alreadyExists) {
-        throw new Conflict(`The "email" (${email}) already exists`);
-      }
-
-      const hashedPassword = await Crypto.hash(password);
-
-      const user = new User({
-        name,
-        email,
-        password: hashedPassword
-      });
-
-      const savedUser = await user.save();
-
-      // Remove password from final result
-      let mutableUser = savedUser.toJSON();
-      delete mutableUser.password;
-
-      res.status(201).send(mutableUser);
-    } catch (err) {
-      next(err);
+    if (alreadyExists) {
+      throw new Conflict(`The "email" (${email}) already exists`);
     }
-  })
 
-  .post('/login', async (req, res, next) => {
-    const { body } = req;
-    const { email, password } = body;
+    const hashedPassword = await Crypto.hash(password);
 
-    try {
-      const error = UsersValidations.validateLogin(body);
+    const user = await UserServices.save({
+      name,
+      email,
+      password: hashedPassword
+    });
 
-      if (error) {
-        throw new BadRequest(error);
-      }
+    const mutable = UserServices.getMutable(user);
 
-      const user = await User.findOne({ email });
+    res.status(201).send(mutable);
+  } catch (err) {
+    next(err);
+  }
+});
 
-      if (!user) {
-        throw new NotFound(`The "email" (${email}) was not found`);
-      }
+router.post('/login', async (req, res, next) => {
+  const { body } = req;
+  const { email, password } = body;
 
-      const validPassword = await Crypto.compare(password, user.password);
+  try {
+    const error = UsersValidations.validateLogin(body);
 
-      if (!validPassword) {
-        throw new Unauthorized('Wrong "email"/"password" combination');
-      }
-
-      // Remove password from final result
-      let mutableUser = user.toJSON();
-      delete mutableUser.password;
-
-      const token = jwt.sign(mutableUser, process.env.SECRET_JWT_KEY);
-
-      res.header('auth-token', token).send(mutableUser);
-    } catch (err) {
-      next(err);
+    if (error) {
+      throw new BadRequest(error);
     }
-  });
+
+    const user = await UserServices.getByEmail(email);
+
+    if (!user) {
+      throw new NotFound(`The "email" (${email}) was not found`);
+    }
+
+    const validPassword = await Crypto.compare(password, user.password);
+
+    if (!validPassword) {
+      throw new Unauthorized('Wrong "email"/"password" combination');
+    }
+
+    const mutable = UserServices.getMutable(user);
+
+    const token = jwt.sign(mutable, process.env.SECRET_JWT_KEY, {
+      expiresIn: '1h'
+    });
+
+    res.header('auth-token', token).send(mutable);
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;

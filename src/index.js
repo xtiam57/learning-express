@@ -11,10 +11,13 @@ const { usersRouter, tasksRouter } = require('./routes');
 const app = express();
 const port = process.env.PORT || 8000;
 
+// Connecting to MongoDB
+connectToDB();
+
 // Middlewares
 app.use(express.json());
 
-// Router
+// Routers
 app.use('/api/users', usersRouter);
 app.use('/api/tasks', tasksRouter);
 
@@ -23,13 +26,8 @@ app.use(handleErrors);
 
 // Root
 app.get('/', (req, res) => {
-  res.send({
-    status: 'It Works!'
-  });
+  res.send({ message: 'It Works!' });
 });
-
-// Connecting to MongoDB
-connectToDB();
 
 // Setting up graphql
 apolloServer.applyMiddleware({ app });

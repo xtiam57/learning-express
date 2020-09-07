@@ -1,20 +1,16 @@
-const jwt = require('jsonwebtoken');
-const { Forbidden } = require('../utils/errors');
+const { Validator } = require('../utils');
 
 const verifyToken = (req, res, next) => {
   try {
     const token = req.header('auth-token');
 
-    if (!token) {
-      throw new Forbidden('Missing "auth-token"');
-    }
+    const verifiedUser = Validator.validateToken(token);
 
-    const verified = jwt.verify(token, process.env.SECRET_JWT_KEY);
-    req.user = verified;
+    req.user = verifiedUser;
     next();
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = verifyToken;
+module.exports = { verifyToken };
