@@ -1,12 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const router = express.Router();
 
 const { verifyToken } = require('../middlewares');
 const { UserServices } = require('../services');
-const { UsersValidations } = require('../validations');
-const { BadRequest, Conflict, NotFound, Unauthorized } = require('../utils/errors');
-const { Crypto } = require('../utils');
+const { UsersValidations } = require('../models/validations');
+const { Errors, Crypto } = require('../utils');
+const { BadRequest, Conflict, NotFound, Unauthorized } = Errors;
+
+const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {

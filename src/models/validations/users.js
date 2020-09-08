@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const { Validator } = require('../utils');
+const { validateSchema } = require('./validateSchema');
 
 // PUT and POST
 const UpsertSchema = Joi.object({
@@ -16,6 +16,6 @@ const LoginSchema = Joi.object({
 });
 
 module.exports = {
-  validateUpsert: (data) => Validator.validateModel(UpsertSchema, data),
-  validateLogin: (data) => Validator.validateModel(LoginSchema, data)
+  validateUpsert: (data) => validateSchema(UpsertSchema, data),
+  validateLogin: (data) => validateSchema(LoginSchema, data)
 };

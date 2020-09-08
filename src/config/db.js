@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const DATABASE_URI = process.env.DB_URI;
 
-async function connectToDB() {
+module.exports = async () => {
   try {
     await mongoose.connect(DATABASE_URI, {
       useNewUrlParser: true,
@@ -15,6 +15,4 @@ async function connectToDB() {
   } catch (err) {
     console.log(err);
   }
-}
-
-module.exports = connectToDB;
+};

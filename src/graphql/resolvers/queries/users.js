@@ -1,10 +1,15 @@
 module.exports = {
   users: async (root, params, context) => {
-    const { token, services, validateToken } = context;
+    const { req, validateToken, UserServices } = context;
+    const token = req.header('auth-token');
 
     // const verifiedUser = validateToken(token);
 
-    return await services.UserServices.getAll();
+    return await UserServices.getAll();
   },
-  user: async (root, { id }, { services }) => await services.UserServices.getById(id)
+  user: async (root, params, context) => {
+    const { id } = params;
+    const { UserServices } = context;
+    return await UserServices.getById(id);
+  }
 };

@@ -1,4 +1,5 @@
-const { GeneralError } = require('../utils/errors');
+const { Errors } = require('../utils');
+const { GeneralError } = Errors;
 
 const handleErrors = (err, req, res, next) => {
   console.error(err);

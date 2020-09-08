@@ -6,15 +6,17 @@ const resolvers = require('./resolvers');
 
 // Part of the context
 const services = require('../services');
-const { validateToken } = require('../utils').Validator;
+const { Validator } = require('../utils');
+const { validateToken } = Validator;
 
 module.exports = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({
-    services,
+  context: ({ req, res }) => ({
+    req,
+    res,
     validateToken,
-    token: req.header('auth-token')
+    ...services
   }),
   playground: true,
   introspection: true

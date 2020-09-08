@@ -1,10 +1,9 @@
-const express = require('express');
 require('dotenv').config();
+const express = require('express');
 
 const apolloServer = require('./graphql');
 const connectToDB = require('./config/db');
 const { handleErrors } = require('./middlewares');
-
 const { usersRouter, tasksRouter } = require('./routes');
 
 // Starting app
